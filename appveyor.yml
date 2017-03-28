@@ -37,15 +37,15 @@ build_script:
   - cd vinecopulib
   - md build
   - cd build
-  - cmake .. %CMAKE_ARGS% -DCMAKE_GENERATOR_PLATFORM="%CMAKE_GEN_PLAT%" -DBUILD_TESTING=OFF
+  - cmake .. %CMAKE_ARGS% -DCMAKE_GENERATOR_PLATFORM="%CMAKE_GEN_PLAT%" -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=C:\projects\vinecopulib-install
   - cmake --build . --config Debug
   - cmake --build . --config Release
-#TODO: make install!
-  - cd ..\pyvinecopulib
+  - cmake --build . --config Release --target install
+  - cd ..\..\pyvinecopulib
 
   - md build
   - cd build
-  - cmake .. %CMAKE_ARGS% -DCMAKE_GENERATOR_PLATFORM="%CMAKE_GEN_PLAT%"
+  - cmake .. %CMAKE_ARGS% -DCMAKE_GENERATOR_PLATFORM="%CMAKE_GEN_PLAT%" -DCMAKE_PREFIX_PATH=C:\projects\vinecopulib-install
   - set path_orig=%path%
 
   - cmake --build . --config Debug
