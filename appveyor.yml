@@ -33,7 +33,7 @@ build_script:
   - ps: $env:CMAKE_ARGS = '-DBOOST_ROOT=C:\Libraries\boost_1_63_0 -DEIGEN3_INCLUDE_DIR="C:\projects\eigen-eigen-da9b4e14c255" -DCMAKE_LIBRARY_PATH="C:\projects\nlopt" -DCMAKE_INCLUDE_PATH="C:\projects\nlopt"'
 
   - cd ..
-  - git clone --depth=1 https://github.com/vinecopulib/vinecopulib.git
+  - git clone --depth=1 https://github.com/vinecopulib/vinecopulib.git dev
   - cd vinecopulib
   - md build
   - cd build
