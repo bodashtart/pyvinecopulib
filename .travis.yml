@@ -48,7 +48,7 @@ install:
   - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
   - make
   - sudo make install
-  - cd ..
+  - cd ../..
 
 script:
   - mkdir build-debug
