@@ -1,39 +1,30 @@
 platform: 
-  - Win32
+  - x86
   - x64
-#TODO: configuration: Debug/Release + same with CMake
 
 init:
   - ps: |
-        If ($env:platform -Match "Win32") {
+        If ($env:platform -Match "x86") {
           $env:NLOPT_ZIP="nlopt-2.4.2-dll32.zip"
+          $env:CMAKE_GEN_PLAT="Win32"
         } Else {
           $env:NLOPT_ZIP="nlopt-2.4.2-dll64.zip"
+          $env:CMAKE_GEN_PLAT="x64"
         }
   - cmd: C:/"Program Files (x86)"/"Microsoft Visual Studio 12.0"/VC/vcvarsall.bat
-  - ps: |
-        $ErrorActionPreference = "Stop"
-        Invoke-WebRequest http://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
-        Import-Module '..\appveyor-tool.ps1'
 
 install:
   - choco upgrade cmake # so Boost 1.63 is supported
   - set path=C:\Program Files\CMake\bin;%path%
-
-  - ps: Bootstrap #R
-  - ps: $env:R_LIBS_USER = 'c:\R\library'
-  - travis-tool.sh r_install VineCopula
 
   - ps: wget http://bitbucket.org/eigen/eigen/get/3.3.2.zip -OutFile eigen.zip
   - 7z x eigen.zip -o"C:\projects" -y > nul
 
   - ps: wget "http://ab-initio.mit.edu/nlopt/$env:NLOPT_ZIP" -OutFile nlopt.zip
   - 7z x nlopt.zip -o"C:\projects\nlopt" -y > nul
-  - lib /def:C:\projects\nlopt\libnlopt-0.def
+  - lib /def:C:\projects\nlopt\libnlopt-0.def /machine:%platform%
   - move libnlopt-0.lib C:\projects\nlopt\
   - move libnlopt-0.exp C:\projects\nlopt\
-
-  - pip install numpy
 
 before_build:
 - del "C:\Program Files (x86)\MSBuild\14.0\Microsoft.Common.targets\ImportAfter\Xamarin.Common.targets"
@@ -41,16 +32,36 @@ before_build:
 build_script:
   - ps: $env:CMAKE_ARGS = '-DBOOST_ROOT=C:\Libraries\boost_1_63_0 -DEIGEN3_INCLUDE_DIR="C:\projects\eigen-eigen-da9b4e14c255" -DCMAKE_LIBRARY_PATH="C:\projects\nlopt" -DCMAKE_INCLUDE_PATH="C:\projects\nlopt"'
 
-  - md build-debug
-  - cd build-debug
-  - cmake .. %CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Debug
-  - cmake --build .
-  - ctest -C Debug --output-on-failure
   - cd ..
+  - git clone --depth=1 https://github.com/vinecopulib/vinecopulib.git
+  - cd vinecopulib
+  - md build
+  - cd build
+  - cmake --build . --config Debug
+  - cmake --build . --config Release
+#TODO: make install!
+  - cd ..\pyvinecopulib
 
-  - md build-release
-  - cd build-release
-  - cmake .. %CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release
-  - cmake --build .
-  - ctest -C Release --output-on-failure
+  - md build
+  - cd build
+  - cmake .. %CMAKE_ARGS% 
+  - set path_orig=%path%
+
+  - cmake --build . --config Debug
+  - set path=%path_orig%;C:\projects\pyvinecopulib\build\Debug;C:\projects\nlopt;C:\projects\vinecopulib\build\Debug
+  - ctest --output-on-failure
+
+  - cmake --build . --config Release
+  - set path=%path_orig%;C:\projects\pyvinecopulib\build\Release;C:\projects\nlopt;C:\projects\vinecopulib\build\Release
+  - ctest --output-on-failure
+
   - cd ..
+  
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+on_success:
+  - 7z a pyvinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%.zip build\Debug\pyvinecopulib.* build\Debug\pyvinecopulib.*
+  - appveyor PushArtifact vinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%.zip
+  - 7z a pyvinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%.zip build\Release\pyvinecopulib.* build\Debug\pyvinecopulib.*
+  - appveyor PushArtifact vinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%.zip
