@@ -41,7 +41,7 @@ install:
   - if [ $TRAVIS_OS_NAME == osx ]; then rm /usr/local/include/c++; fi # https://github.com/Homebrew/brew/issues/1742#issuecomment-277308817
 
   ### Vinecopulib
-  - git clone --depth=1 https://github.com/vinecopulib/vinecopulib.git dev
+  - git clone --depth=1 --single-branch --branch dev https://github.com/vinecopulib/vinecopulib.git
   - cd vinecopulib
   - mkdir build
   - cd build
