@@ -37,7 +37,7 @@ build_script:
   - cd vinecopulib
   - md build
   - cd build
-  - cmake .. %CMAKE_ARGS% -DCMAKE_GENERATOR_PLATFORM="%CMAKE_GEN_PLAT%"
+  - cmake .. %CMAKE_ARGS% -DCMAKE_GENERATOR_PLATFORM="%CMAKE_GEN_PLAT%" -DBUILD_TESTING=OFF
   - cmake --build . --config Debug
   - cmake --build . --config Release
 #TODO: make install!
