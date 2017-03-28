@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.7)
+
+project(pyvinecopulib CXX)
+enable_testing()
+
+find_package(vinecopulib REQUIRED)
+
+find_package(PythonInterp REQUIRED)
+find_package(PythonLibs ${PYTHON_VERSION_STRING} EXACT REQUIRED)
+
+if (APPLE OR WIN32) # Windows & Homebrew convention
+  set(TMP_BOOST_PYTHON_COMPONENT "python")
+else() # Debian convention
+  set(TMP_BOOST_PYTHON_COMPONENT "python-py${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}")
+endif()
+find_package(Boost COMPONENTS ${TMP_BOOST_PYTHON_COMPONENT} REQUIRED)
+unset(TMP_BOOST_PYTHON_COMPONENT)
+
+add_subdirectory(src)
+add_subdirectory(tests)
