@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.2)
 project(pyvinecopulib CXX)
 enable_testing()
 
+include(cmake/findEigen3.cmake            REQUIRED)
+include(cmake/findNlopt.cmake             REQUIRED)
+
 find_package(vinecopulib REQUIRED)
 
 find_package(PythonInterp REQUIRED)

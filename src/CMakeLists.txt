@@ -10,8 +10,8 @@ endif()
 
 
 # vinecopulib
-target_link_libraries(pyvinecopulib ${VINECOPULIB_LIBRARIES})
-target_include_directories(pyvinecopulib PUBLIC ${VINECOPULIB_INCLUDE_DIR})
+target_link_libraries(pyvinecopulib ${VINECOPULIB_LIBRARIES} ${EIGEN3_INCLUDE_DIR} ${NLOPT_INCLUDE_DIR})
+target_include_directories(pyvinecopulib PUBLIC ${VINECOPULIB_INCLUDE_DIR} ${NLOPT_LIBRARIES})
 
 
 # informing the Python bindings where to find Python
