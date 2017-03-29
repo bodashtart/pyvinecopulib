@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.2)
 
 project(pyvinecopulib CXX)
+
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_MACOSX_RPATH 1)
+
 enable_testing()
 
 include(cmake/findEigen3.cmake            REQUIRED)
