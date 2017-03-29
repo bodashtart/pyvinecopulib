@@ -45,7 +45,7 @@ install:
   - cd vinecopulib
   - mkdir build
   - cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX:PATH=/usr
   - make
   - sudo make install
   - cd ../..
