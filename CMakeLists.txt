@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.2)
 project(pyvinecopulib CXX)
 
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 
 enable_testing()
 
