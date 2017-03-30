@@ -1,9 +1,5 @@
 language: cpp
 
-#compiler:
-#  - gcc
-#  - clang TODO!
-
 sudo: required
 
 matrix:
@@ -45,7 +41,7 @@ install:
   - cd vinecopulib
   - mkdir build
   - cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX:PATH=/usr
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
   - make
   - sudo make install
   - cd ../..
