@@ -51,11 +51,11 @@ build_script:
   - set path_orig=%path%
 
   - cmake --build . --config Debug
-  - set path=%path_orig%;C:\projects\pyvinecopulib\build\Debug;C:\projects\nlopt;C:\projects\vinecopulib-install\lib
+  - set path=%path_orig%;C:\projects\pyvinecopulib\build\Debug;C:\projects\nlopt;C:\projects\vinecopulib-install\bin
   - ctest -C Debug --output-on-failure
 
   - cmake --build . --config Release
-  - set path=%path_orig%;C:\projects\pyvinecopulib\build\Release;C:\projects\nlopt;C:\projects\vinecopulib-install\lib
+  - set path=%path_orig%;C:\projects\pyvinecopulib\build\Release;C:\projects\nlopt;C:\projects\vinecopulib-install\bin
   - ctest -C Release --output-on-failure
 
   - cd ..
