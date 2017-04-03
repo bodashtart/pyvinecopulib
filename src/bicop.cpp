@@ -19,47 +19,23 @@ namespace
 {
     namespace bp = boost::python;
 
-    struct bicop_wrap
+    struct bicop_wrap : vinecopulib::Bicop, bp::wrapper<vinecopulib::Bicop>
     {
-        vinecopulib::BicopPtr bicop;
+        bicop_wrap() : vinecopulib::Bicop() {}
 
-        bicop_wrap(const vinecopulib::BicopFamily& family, const int& rotation, const Eigen::VectorXd& parameters)
-        {
-            //bicop = vinecopulib::Bicop::create(family, rotation, parameters);
-        }
+        bicop_wrap(const vinecopulib::BicopFamily &family) : vinecopulib::Bicop(family) {}
 
-        bicop_wrap(const vinecopulib::BicopFamily& family, const int& rotation)
-        {
-            //bicop = vinecopulib::Bicop::create(family, rotation);
-        }
+        bicop_wrap(const vinecopulib::BicopFamily &family, const int &rotation) : vinecopulib::Bicop(family, rotation) {}
 
-        bicop_wrap(const vinecopulib::BicopFamily& family)
-        {
-            //bicop = vinecopulib::Bicop::create(family);
-        }
+        bicop_wrap(const vinecopulib::BicopFamily &family, const int &rotation, const Eigen::MatrixXd &parameters) : vinecopulib::Bicop(family, rotation, parameters) {}
 
-        vinecopulib::BicopFamily get_family() 
-        { 
-            throw;
-            //return bicop->get_family(); 
-        }
-
-        int get_rotation() 
-        { 
-            throw;
-            //return bicop->get_rotation(); 
-        }
-
-        Eigen::VectorXd get_parameters() 
-        {
-            throw;
-            //return bicop->get_parameters();
-        }
+        void fit(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data) { vinecopulib::Bicop::fit(data); }
+        void select(Eigen::Matrix<double, Eigen::Dynamic, 2> data) { vinecopulib::Bicop::select(data); }
     };
 
-    std::vector<std::vector<vinecopulib::BicopPtr>> object_to_vector_of_vector_of_BicopPtr(const bp::list& pair_copulas)
+    std::vector<std::vector<vinecopulib::Bicop>> object_to_vector_of_vector_of_BicopPtr(const bp::list& pair_copulas)
     {
-        std::vector<std::vector<vinecopulib::BicopPtr>> ret(bp::len(pair_copulas));
+        std::vector<std::vector<vinecopulib::Bicop>> ret(bp::len(pair_copulas));
 
         for (decltype(ret.size()) i=0; i<ret.size(); ++i)
         {
@@ -68,7 +44,7 @@ namespace
             for (decltype(bp::len(list)) j=0; j<bp::len(list); ++j)
             {
                 auto elem = list[j];
-                ret[i][j] = bp::extract<bicop_wrap>(elem)().bicop;
+                ret[i][j] = bp::extract<bicop_wrap>(elem)();
             }
         }
 
@@ -82,11 +58,13 @@ namespace
         vinecop_wrap(int d) : vinecopulib::Vinecop(d) {}
 
         vinecop_wrap(const bp::list& pair_copulas, const Eigen::MatrixXi& matrix)
-            //: vinecopulib::Vinecop(
-            //    object_to_vector_of_vector_of_BicopPtr(pair_copulas), 
-            //    matrix
-            //)
+            : vinecopulib::Vinecop(
+                object_to_vector_of_vector_of_BicopPtr(pair_copulas), 
+                matrix
+            )
         { }
+
+        void select_all(const Eigen::MatrixXd& data) { vinecopulib::Vinecop::select_all(data); }
     };
 }
 
@@ -111,13 +89,19 @@ void export_family_enums()
 
 void export_bicop_class()
 {
-    boost::python::class_<bicop_wrap, boost::noncopyable>("bicop", boost::python::no_init)
+    boost::python::class_<bicop_wrap, boost::noncopyable>("bicop")
+        // ctors
         .def(boost::python::init<vinecopulib::BicopFamily>())
         .def(boost::python::init<vinecopulib::BicopFamily, int>())
-        .def(boost::python::init<vinecopulib::BicopFamily, int, Eigen::VectorXd>())
-        .add_property("rotation", &bicop_wrap::get_rotation)
-        .add_property("parameters", &bicop_wrap::get_parameters)
-        .add_property("family", &bicop_wrap::get_family)
+        .def(boost::python::init<vinecopulib::BicopFamily, int, Eigen::MatrixXd>())
+        //.def(boost::python::init<vinecopulib::BicopFamily, int>())
+        //.def(boost::python::init<vinecopulib::BicopFamily, int, Eigen::VectorXd>())
+        .add_property("rotation", &vinecopulib::Bicop::get_rotation, &vinecopulib::Bicop::set_rotation)
+        .add_property("parameters", &vinecopulib::Bicop::get_parameters, &vinecopulib::Bicop::set_parameters)
+        .add_property("family", &vinecopulib::Bicop::get_family)
+        .def("simulate", &vinecopulib::Bicop::simulate)
+        .def("fit", &bicop_wrap::fit)
+        .def("select", &bicop_wrap::select)
     ;
 
     //bp::to_python_converter<BicopPtr, BicopPtr_to_bicop>();
@@ -137,13 +121,13 @@ void export_vinecop_class()
         .def("family",      &vinecopulib::Vinecop::get_family)
         .add_property("all_families", &vinecopulib::Vinecop::get_all_families)
         .add_property("matrix",       &vinecopulib::Vinecop::get_matrix)
-        //.def("pair_copula", &vinecopulib::Vinecop::get_pair_copula) - TODO!
+        //.def("pair_copula", &vinecopulib::Vinecop::get_pair_copula)
         .def("pdf",         &vinecopulib::Vinecop::pdf)
         .def("simulate", &vinecopulib::Vinecop::simulate) 
         .def("inverse_rosenblatt", &vinecopulib::Vinecop::inverse_rosenblatt)
         // static methods
+        .def("select_all", &vinecop_wrap::select_all); //, (
 /*
-        .def("select", &vinecopulib::Vinecop::select, (
             boost::python::arg("data"),
             boost::python::arg("family_set"),
             boost::python::arg("method"),

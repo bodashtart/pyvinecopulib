@@ -58,21 +58,22 @@ namespace
         }
     };
 
-    struct MatXi_to_ndarray
+    template <class MatrixT, int NumpyType>
+    struct MatXT_to_ndarray
     {
-        static PyObject* convert(Eigen::MatrixXi const &mat)
+        static PyObject* convert(MatrixT const &mat)
         {
             npy_intp size[2];
             size[1] = mat.rows();
             size[0] = mat.cols();
 
-            Eigen::MatrixXi::Scalar * data = const_cast<Eigen::MatrixXi::Scalar *>(&mat(0,0)); 
+            typename MatrixT::Scalar * data = const_cast<typename MatrixT::Scalar*>(&mat(0,0)); 
 
 // TODO: assert sizeof(Eigen::MatrixXi::Scalar) == sizof(NPY_INT)
 // TODO: assert strides OK
 // TODO: handle zero size
 
-            PyObject * pyObj = PyArray_SimpleNewFromData(2, size, NPY_INT32, data);
+            PyObject * pyObj = PyArray_SimpleNewFromData(2, size, NumpyType, data);
             bp::handle<> handle( pyObj );
             bp::numeric::array arr( handle );
 
@@ -122,7 +123,20 @@ void register_eigen_converters()
 
     bp::to_python_converter<Eigen::VectorXd, VecXd_to_list>();
 
-    bp::to_python_converter<Eigen::MatrixXi, MatXi_to_ndarray>();   
+    bp::to_python_converter<
+        Eigen::MatrixXi, 
+        MatXT_to_ndarray<Eigen::MatrixXi, NPY_INT32>
+    >();   
+
+    bp::to_python_converter<
+        Eigen::MatrixXd, 
+        MatXT_to_ndarray<Eigen::MatrixXd, NPY_DOUBLE>
+    >();   
+
+    bp::to_python_converter<
+        Eigen::Matrix<double, -1, 2, 0, -1, 2>, 
+        MatXT_to_ndarray<Eigen::Matrix<double, -1, 2, 0, -1, 2>, NPY_DOUBLE>
+    >();   
 
     bp::converter::registry::push_back(
         &list_to_VecXd::convertible,
@@ -140,5 +154,11 @@ void register_eigen_converters()
         &ndarray_to_MatX<NPY_DOUBLE, Eigen::MatrixXd>::convertible,
         &ndarray_to_MatX<NPY_DOUBLE, Eigen::MatrixXd>::construct,
         bp::type_id<Eigen::MatrixXd>()
+    );
+
+    bp::converter::registry::push_back(
+        &ndarray_to_MatX<NPY_DOUBLE, Eigen::MatrixXd>::convertible,
+        &ndarray_to_MatX<NPY_DOUBLE, Eigen::MatrixXd>::construct,
+        bp::type_id<Eigen::Matrix<double, Eigen::Dynamic, 2>>()
     );
 }

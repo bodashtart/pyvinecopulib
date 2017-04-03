@@ -45,7 +45,6 @@ build_script:
   - cmake --build . --config Debug
   - cmake --build . --config Release
   - cmake --build . --config Release --target install
-  - move C:\projects\vinecopulib-install\bin\* C:\projects\vinecopulib-install\lib #TEMP!
   - cd ..\..\pyvinecopulib
 
   - md build
