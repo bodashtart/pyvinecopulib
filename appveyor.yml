@@ -7,9 +7,11 @@ init:
         If ($env:platform -Match "x86") {
           $env:NLOPT_ZIP="nlopt-2.4.2-dll32.zip"
           $env:CMAKE_GEN_PLAT="Win32"
+          $env:PYTHON_ROOT="C:\Python27"
         } Else {
           $env:NLOPT_ZIP="nlopt-2.4.2-dll64.zip"
           $env:CMAKE_GEN_PLAT="x64"
+          $env:PYTHON_ROOT="C:\Python27-x64"
         }
   - cmd: C:/"Program Files (x86)"/"Microsoft Visual Studio 12.0"/VC/vcvarsall.bat
 
@@ -43,27 +45,24 @@ build_script:
   - cmake --build . --config Debug
   - cmake --build . --config Release
   - cmake --build . --config Release --target install
+  - move C:\projects\vinecopulib-install\bin\* C:\projects\vinecopulib-install\lib #TEMP!
   - cd ..\..\pyvinecopulib
 
   - md build
   - cd build
-  - cmake .. %CMAKE_ARGS% -DCMAKE_GENERATOR_PLATFORM="%CMAKE_GEN_PLAT%" -DCMAKE_PREFIX_PATH=C:\projects\vinecopulib-install
+  - cmake .. %CMAKE_ARGS% -DCMAKE_GENERATOR_PLATFORM="%CMAKE_GEN_PLAT%" -DCMAKE_PREFIX_PATH=C:\projects\vinecopulib-install -DPYTHON_EXECUTABLE=%PYTHON_ROOT%\python.exe -DPYTHON_INCLUDE_DIR=%PYTHON_ROOT%\include
   - set path_orig=%path%
 
   - cmake --build . --config Debug
-#  - set path=%path_orig%;C:\projects\pyvinecopulib\build\src\Debug;C:\projects\nlopt;C:\projects\vinecopulib-install\bin
-#  - dumpbin /dependents src\Debug\pyvinecopulib.pyd
   - ctest -C Debug --output-on-failure
 
   - cmake --build . --config Release
-#  - dumpbin /dependents src\Release\pyvinecopulib.pyd
-#  - set path=%path_orig%;C:\projects\pyvinecopulib\build\src\Release;C:\projects\nlopt;C:\projects\vinecopulib-install\bin
   - ctest -C Release --output-on-failure
 
   - cd ..
   
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 on_success:
   - 7z a pyvinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%.zip build\Debug\pyvinecopulib.* build\Debug\pyvinecopulib.*
