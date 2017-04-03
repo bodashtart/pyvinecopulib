@@ -124,18 +124,18 @@ void register_eigen_converters()
     bp::to_python_converter<Eigen::VectorXd, VecXd_to_list>();
 
     bp::to_python_converter<
-        Eigen::MatrixXi, 
-        MatXT_to_ndarray<Eigen::MatrixXi, NPY_INT32>
+        Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>, 
+        MatXT_to_ndarray<Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>, NPY_INT>
     >();   
 
     bp::to_python_converter<
-        Eigen::MatrixXd, 
-        MatXT_to_ndarray<Eigen::MatrixXd, NPY_DOUBLE>
+        Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>, 
+        MatXT_to_ndarray<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>, NPY_DOUBLE>
     >();   
 
     bp::to_python_converter<
-        Eigen::Matrix<double, -1, 2, 0, -1, 2>, 
-        MatXT_to_ndarray<Eigen::Matrix<double, -1, 2, 0, -1, 2>, NPY_DOUBLE>
+        Eigen::Matrix<double, Eigen::Dynamic, 2>, 
+        MatXT_to_ndarray<Eigen::Matrix<double, Eigen::Dynamic, 2>, NPY_DOUBLE>
     >();   
 
     bp::converter::registry::push_back(
@@ -145,15 +145,26 @@ void register_eigen_converters()
     );
 
     bp::converter::registry::push_back(
-        &ndarray_to_MatX<NPY_INT32, Eigen::MatrixXi>::convertible,
-        &ndarray_to_MatX<NPY_INT32, Eigen::MatrixXi>::construct,
-        bp::type_id<Eigen::MatrixXi>()
+        &ndarray_to_MatX<NPY_INT, Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>>::convertible,
+        &ndarray_to_MatX<NPY_INT, Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>>::construct,
+        bp::type_id<Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>>()
+    );
+
+    const int NPY_SIZET = 
+        sizeof(size_t) == 8 ? NPY_UINT64 :
+        sizeof(size_t) == 4 ? NPY_UINT32 :
+        throw new std::logic_error("");
+
+    bp::converter::registry::push_back(
+        &ndarray_to_MatX<NPY_SIZET, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>::convertible,
+        &ndarray_to_MatX<NPY_SIZET, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>::construct,
+        bp::type_id<Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>()
     );
 
     bp::converter::registry::push_back(
-        &ndarray_to_MatX<NPY_DOUBLE, Eigen::MatrixXd>::convertible,
-        &ndarray_to_MatX<NPY_DOUBLE, Eigen::MatrixXd>::construct,
-        bp::type_id<Eigen::MatrixXd>()
+        &ndarray_to_MatX<NPY_DOUBLE, Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>>::convertible,
+        &ndarray_to_MatX<NPY_DOUBLE, Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>>::construct,
+        bp::type_id<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>>()
     );
 
     bp::converter::registry::push_back(

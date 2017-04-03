@@ -33,7 +33,7 @@ namespace
         void select(Eigen::Matrix<double, Eigen::Dynamic, 2> data) { vinecopulib::Bicop::select(data); }
     };
 
-    std::vector<std::vector<vinecopulib::Bicop>> object_to_vector_of_vector_of_BicopPtr(const bp::list& pair_copulas)
+    std::vector<std::vector<vinecopulib::Bicop>> object_to_vector_of_vector_of_Bicop(const bp::list& pair_copulas)
     {
         std::vector<std::vector<vinecopulib::Bicop>> ret(bp::len(pair_copulas));
 
@@ -57,9 +57,9 @@ namespace
 
         vinecop_wrap(int d) : vinecopulib::Vinecop(d) {}
 
-        vinecop_wrap(const bp::list& pair_copulas, const Eigen::MatrixXi& matrix)
+        vinecop_wrap(const bp::list& pair_copulas, const Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>& matrix)
             : vinecopulib::Vinecop(
-                object_to_vector_of_vector_of_BicopPtr(pair_copulas), 
+                object_to_vector_of_vector_of_Bicop(pair_copulas), 
                 matrix
             )
         { }
