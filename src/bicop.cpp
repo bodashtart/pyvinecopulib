@@ -112,7 +112,7 @@ void export_vinecop_class()
     boost::python::class_<vinecop_wrap, boost::noncopyable>("vinecop")
         // ctors
         .def(boost::python::init<int>())
-        .def(boost::python::init<boost::python::list, Eigen::MatrixXi>()) 
+        .def(boost::python::init<boost::python::list, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>()) 
         // member functions
         .def("rotation",    &vinecopulib::Vinecop::get_rotation)
         .add_property("all_rotations", &vinecopulib::Vinecop::get_all_rotations)

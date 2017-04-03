@@ -17,7 +17,7 @@ vinecop = pvcl.vinecop([
   [1,1,1,0],
   [1,1,0,0],
   [1,0,0,0]
-], dtype=np.int32))
+], dtype=np.uint64))
 
 # accessors
 print(vinecop.rotation(1,1))
