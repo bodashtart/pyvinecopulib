@@ -28,7 +28,7 @@ install:
   - move libnlopt-0.lib C:\projects\nlopt\
   - move libnlopt-0.exp C:\projects\nlopt\
 
-  - pip install numpy
+  - %PYTHON_ROOT%/python.exe -m pip install numpy
 
 before_build:
   - del "C:\Program Files (x86)\MSBuild\14.0\Microsoft.Common.targets\ImportAfter\Xamarin.Common.targets"
