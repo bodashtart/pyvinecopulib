@@ -13,7 +13,7 @@ foreach (test_name test_git_revision)#;test_bicop;test_vinecop;test_bicop_readme
 
     # https://cmake.org/pipermail/cmake-developers/2013-June/019217.html
     set_property(TEST ${test_name} PROPERTY ENVIRONMENT "PATH=${PATH_STRING}")
-    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/src/${CMAKE_CFG_INTDIR}")
+    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/src/Debug") #TODO: ${CMAKE_CFG_INTDIR} ?
   else()
     set_property(TEST ${test_name} PROPERTY ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/src")
     if (NOT APPLE)
