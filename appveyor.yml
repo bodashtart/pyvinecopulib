@@ -1,0 +1,69 @@
+platform: 
+  - x86
+  - x64
+
+init:
+  - ps: |
+        If ($env:platform -Match "x86") {
+          $env:NLOPT_ZIP="nlopt-2.4.2-dll32.zip"
+          $env:CMAKE_GEN_PLAT="Win32"
+          $env:PYTHON_ROOT="C:\Python27"
+        } Else {
+          $env:NLOPT_ZIP="nlopt-2.4.2-dll64.zip"
+          $env:CMAKE_GEN_PLAT="x64"
+          $env:PYTHON_ROOT="C:\Python27-x64"
+        }
+  - cmd: C:/"Program Files (x86)"/"Microsoft Visual Studio 12.0"/VC/vcvarsall.bat
+
+install:
+  - choco upgrade cmake # so Boost 1.63 is supported
+  - set path=C:\Program Files\CMake\bin;%path%
+
+  - ps: wget http://bitbucket.org/eigen/eigen/get/3.3.2.zip -OutFile eigen.zip
+  - 7z x eigen.zip -o"C:\projects" -y > nul
+
+  - ps: wget "http://ab-initio.mit.edu/nlopt/$env:NLOPT_ZIP" -OutFile nlopt.zip
+  - 7z x nlopt.zip -o"C:\projects\nlopt" -y > nul
+  - lib /def:C:\projects\nlopt\libnlopt-0.def /machine:%platform%
+  - move libnlopt-0.lib C:\projects\nlopt\
+  - move libnlopt-0.exp C:\projects\nlopt\
+
+  - set path=%PYTHON_ROOT%;%path%
+  - python -m pip install numpy
+
+before_build:
+  - del "C:\Program Files (x86)\MSBuild\14.0\Microsoft.Common.targets\ImportAfter\Xamarin.Common.targets"
+
+build_script:
+  - ps: $env:CMAKE_ARGS = '-DBOOST_ROOT=C:\Libraries\boost_1_63_0 -DEIGEN3_INCLUDE_DIR="C:\projects\eigen-eigen-da9b4e14c255" -DCMAKE_LIBRARY_PATH="C:\projects\nlopt" -DCMAKE_INCLUDE_PATH="C:\projects\nlopt"'
+
+  - cd ..
+  - git clone --depth=1 --single-branch --branch dev https://github.com/vinecopulib/vinecopulib.git
+  - cd vinecopulib
+  - md build
+  - cd build
+  - cmake .. %CMAKE_ARGS% -DCMAKE_GENERATOR_PLATFORM="%CMAKE_GEN_PLAT%" -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=C:\projects\vinecopulib-install
+  - cmake --build . --config Debug
+  - cmake --build . --config Release
+  - cmake --build . --config Release --target install
+  - cd ..\..\pyvinecopulib
+
+  - md build
+  - cd build
+  - cmake .. %CMAKE_ARGS% -DCMAKE_GENERATOR_PLATFORM="%CMAKE_GEN_PLAT%" -DCMAKE_PREFIX_PATH=C:\projects\vinecopulib-install -DPYTHON_EXECUTABLE=%PYTHON_ROOT%\python.exe -DPYTHON_INCLUDE_DIR=%PYTHON_ROOT%\include
+  - set path_orig=%path%
+
+  - cmake --build . --config Debug
+  - ctest -C Debug --output-on-failure
+
+  - cmake --build . --config Release
+  - ctest -C Release --output-on-failure
+
+  - cd ..
+  
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+on_success:
+  - 7z a pyvinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%.zip build\src\Release\pyvinecopulib.* build\src\Debug\pyvinecopulib.*
+  - appveyor PushArtifact pyvinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%.zip
