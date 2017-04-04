@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.2)
 project(pyvinecopulib CXX)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
 
 enable_testing()
 
@@ -11,6 +10,8 @@ include(cmake/findEigen3.cmake            REQUIRED)
 include(cmake/findNlopt.cmake             REQUIRED)
 
 find_package(vinecopulib REQUIRED)
+find_library(VINECOPULIB_LIB_PATH vinecopulib)
+get_filename_component(VINECOPULIB_LIB_PATH "${VINECOPULIB_LIB_PATH}" DIRECTORY)
 
 find_package(PythonInterp REQUIRED)
 find_package(PythonLibs ${PYTHON_VERSION_STRING} EXACT REQUIRED)

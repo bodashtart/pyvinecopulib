@@ -67,3 +67,8 @@ install ( TARGETS pyvinecopulib
 else()
   message(WARNING "Python package installation temporarily disabled on Windows")
 endif()
+
+if (APPLE)
+  set_target_properties(pyvinecopulib PROPERTIES INSTALL_RPATH "${VINECOPULIB_LIB_PATH};${PYTHON_SITE_DIR}")
+  set_target_properties(pyvinecopulib PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
+endif()
