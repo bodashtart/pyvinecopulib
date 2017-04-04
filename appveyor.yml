@@ -2,16 +2,21 @@ platform:
   - x86
   - x64
 
+environment:
+  matrix:
+    - PYTHON: "27"
+    - PYTHON: "35"
+
 init:
   - ps: |
         If ($env:platform -Match "x86") {
           $env:NLOPT_ZIP="nlopt-2.4.2-dll32.zip"
           $env:CMAKE_GEN_PLAT="Win32"
-          $env:PYTHON_ROOT="C:\Python27"
+          $env:PYTHON_ROOT="C:\Python$env:PYTHON"
         } Else {
           $env:NLOPT_ZIP="nlopt-2.4.2-dll64.zip"
           $env:CMAKE_GEN_PLAT="x64"
-          $env:PYTHON_ROOT="C:\Python27-x64"
+          $env:PYTHON_ROOT="C:\Python$env:PYTHON-x64"
         }
   - cmd: C:/"Program Files (x86)"/"Microsoft Visual Studio 12.0"/VC/vcvarsall.bat
 
@@ -65,5 +70,5 @@ build_script:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 on_success:
-  - 7z a pyvinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%.zip build\src\Release\pyvinecopulib.* build\src\Debug\pyvinecopulib.*
-  - appveyor PushArtifact pyvinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%.zip
+  - 7z a pyvinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%-Python%PYTHON%.zip build\src\Release\pyvinecopulib.* build\src\Debug\pyvinecopulib.*
+  - appveyor PushArtifact pyvinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%-Python%PYTHON%.zip
