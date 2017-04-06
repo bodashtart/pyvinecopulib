@@ -12,135 +12,41 @@
 */
 #include <boost/python.hpp>
 
-#include <vinecopulib/bicop/class.hpp>
-#include <vinecopulib/vinecop/class.hpp>
+#include "bicop_wrap.hpp"
 
-namespace 
+namespace pyvinecopulib 
 {
-    namespace bp = boost::python;
-
-    struct bicop_wrap : vinecopulib::Bicop, bp::wrapper<vinecopulib::Bicop>
+    void export_bicop_class()
     {
-        bicop_wrap() : vinecopulib::Bicop() {}
-
-        bicop_wrap(const vinecopulib::BicopFamily &family) : vinecopulib::Bicop(family) {}
-
-        bicop_wrap(const vinecopulib::BicopFamily &family, const int &rotation) : vinecopulib::Bicop(family, rotation) {}
-
-        bicop_wrap(const vinecopulib::BicopFamily &family, const int &rotation, const Eigen::MatrixXd &parameters) : vinecopulib::Bicop(family, rotation, parameters) {}
-
-        void fit(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data) { vinecopulib::Bicop::fit(data); }
-        void select(Eigen::Matrix<double, Eigen::Dynamic, 2> data) { vinecopulib::Bicop::select(data); }
-    };
-
-    std::vector<std::vector<vinecopulib::Bicop>> object_to_vector_of_vector_of_Bicop(const bp::list& pair_copulas)
-    {
-        std::vector<std::vector<vinecopulib::Bicop>> ret(bp::len(pair_copulas));
-
-        for (decltype(ret.size()) i=0; i<ret.size(); ++i)
-        {
-            auto list = bp::extract<bp::list>(pair_copulas[i])();
-            ret[i].resize(bp::len(list));
-            for (decltype(bp::len(list)) j=0; j<bp::len(list); ++j)
-            {
-                auto elem = list[j];
-                ret[i][j] = bp::extract<bicop_wrap>(elem)();
-            }
-        }
-
-        return ret;
-    }
-
-    struct vinecop_wrap : vinecopulib::Vinecop, bp::wrapper<vinecopulib::Vinecop>
-    {
-        vinecop_wrap() : vinecopulib::Vinecop() {}
-
-        vinecop_wrap(int d) : vinecopulib::Vinecop(d) {}
-
-        vinecop_wrap(const bp::list& pair_copulas, const Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>& matrix)
-            : vinecopulib::Vinecop(
-                object_to_vector_of_vector_of_Bicop(pair_copulas), 
-                matrix
-            )
-        { }
-
-        void select_all(const Eigen::MatrixXd& data) { vinecopulib::Vinecop::select_all(data); }
-    };
-}
-
-void export_family_enums()
-{
-    boost::python::enum_<vinecopulib::BicopFamily>("BicopFamily")
-        .value("indep",    vinecopulib::BicopFamily::indep)
-        .value("gaussian", vinecopulib::BicopFamily::gaussian)
-        .value("student",  vinecopulib::BicopFamily::student)
-        .value("clayton",  vinecopulib::BicopFamily::clayton)
-        .value("gumbel",   vinecopulib::BicopFamily::gumbel)
-        .value("frank",    vinecopulib::BicopFamily::frank)
-        .value("joe",      vinecopulib::BicopFamily::joe)
-        .value("bb1",      vinecopulib::BicopFamily::bb1)
-        .value("bb6",      vinecopulib::BicopFamily::bb6)
-        .value("bb7",      vinecopulib::BicopFamily::bb7)
-        .value("bb8",      vinecopulib::BicopFamily::bb8)
-        .value("tll0",     vinecopulib::BicopFamily::tll0)
-        .export_values()
+        boost::python::class_<bicop_wrap/*, boost::noncopyable*/>("bicop")
+            // ctors
+            .def(boost::python::init<vinecopulib::BicopFamily>())
+            .def(boost::python::init<vinecopulib::BicopFamily, int>())
+            .def(boost::python::init<vinecopulib::BicopFamily, int, Eigen::MatrixXd>())
+            .def(boost::python::init<Eigen::Matrix<double, Eigen::Dynamic, 2>>())
+            .def(boost::python::init<Eigen::Matrix<double, Eigen::Dynamic, 2>, vinecopulib::FitControlsBicop>())
+            // properties
+            .add_property("rotation",      &bicop_wrap::get_rotation,   &bicop_wrap::set_rotation)
+            .add_property("parameters",    &bicop_wrap::get_parameters, &bicop_wrap::set_parameters)
+            .add_property("family",        &bicop_wrap::get_family)
+            .add_property("family_name",   &bicop_wrap::get_family_name)
+            // methods
+            .def("pdf",                    &bicop_wrap::pdf)
+            .def("hfunc1",                 &bicop_wrap::hfunc1)
+            .def("hfunc2",                 &bicop_wrap::hfunc2)
+            .def("hinv1",                  &bicop_wrap::hinv1)
+            .def("hinv2",                  &bicop_wrap::hinv2)
+            .def("simulate",               &bicop_wrap::simulate)
+            .def("fit",                    &bicop_wrap::fit)
+            .def("select",                 &bicop_wrap::select)
+            .def("loglik",                 &bicop_wrap::loglik)
+            .def("aic",                    &bicop_wrap::aic)
+            .def("bic",                    &bicop_wrap::bic)
+            .def("__str__",                &bicop_wrap::str)
+            .def("calculate_npars",        &bicop_wrap::calculate_npars)
+            .def("parameters_to_tau",      &bicop_wrap::parameters_to_tau)
+            .def("tau_to_parameters",      &bicop_wrap::tau_to_parameters)
+            .def("flip",                   &bicop_wrap::flip)
         ;
-}
-
-void export_bicop_class()
-{
-    boost::python::class_<bicop_wrap, boost::noncopyable>("bicop")
-        // ctors
-        .def(boost::python::init<vinecopulib::BicopFamily>())
-        .def(boost::python::init<vinecopulib::BicopFamily, int>())
-        .def(boost::python::init<vinecopulib::BicopFamily, int, Eigen::MatrixXd>())
-        //.def(boost::python::init<vinecopulib::BicopFamily, int>())
-        //.def(boost::python::init<vinecopulib::BicopFamily, int, Eigen::VectorXd>())
-        .add_property("rotation", &vinecopulib::Bicop::get_rotation, &vinecopulib::Bicop::set_rotation)
-        .add_property("parameters", &vinecopulib::Bicop::get_parameters, &vinecopulib::Bicop::set_parameters)
-        .add_property("family", &vinecopulib::Bicop::get_family)
-        .def("simulate", &vinecopulib::Bicop::simulate)
-        .def("fit", &bicop_wrap::fit)
-        .def("select", &bicop_wrap::select)
-    ;
-
-    //bp::to_python_converter<BicopPtr, BicopPtr_to_bicop>();
-}
-
-void export_vinecop_class()
-{
-    boost::python::class_<vinecop_wrap, boost::noncopyable>("vinecop")
-        // ctors
-        .def(boost::python::init<int>())
-        .def(boost::python::init<boost::python::list, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>()) 
-        // member functions
-        .def("rotation",    &vinecopulib::Vinecop::get_rotation)
-        .add_property("all_rotations", &vinecopulib::Vinecop::get_all_rotations)
-        .def("parameters",  &vinecopulib::Vinecop::get_parameters)
-        .def("all_parameters",  &vinecopulib::Vinecop::get_all_parameters)
-        .def("family",      &vinecopulib::Vinecop::get_family)
-        .add_property("all_families", &vinecopulib::Vinecop::get_all_families)
-        .add_property("matrix",       &vinecopulib::Vinecop::get_matrix)
-        //.def("pair_copula", &vinecopulib::Vinecop::get_pair_copula)
-        .def("pdf",         &vinecopulib::Vinecop::pdf)
-        .def("simulate", &vinecopulib::Vinecop::simulate) 
-        .def("inverse_rosenblatt", &vinecopulib::Vinecop::inverse_rosenblatt)
-        // static methods
-        .def("select_all", &vinecop_wrap::select_all); //, (
-/*
-            boost::python::arg("data"),
-            boost::python::arg("family_set"),
-            boost::python::arg("method"),
-            boost::python::arg("truncation_level"),
-            boost::python::arg("matrix"),
-            boost::python::arg("selection_criterion"),
-            boost::python::arg("preselect_families"),
-            boost::python::arg("show_trace")
-        )) // TODO: bp::return_value_policy<bp::manage_new_object>()
-*/
-        //.staticmethod("structure_select")
-// TODO is make_pc_store needed???
-//        .def("make_pair_copula_store", &vinecopulib::Vinecop::make_pc_store)
-//        .staticmethod("make_pc_store")
-    ;
+    }
 }

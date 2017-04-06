@@ -1,4 +1,15 @@
-add_library(pyvinecopulib SHARED git_revision.cpp bicop.cpp eigen_converters.cpp pyvinecopulib.cpp)
+add_library(pyvinecopulib SHARED 
+  version.cpp 
+  bicop.cpp 
+  vinecop.cpp 
+  eigen_converters.cpp 
+  pyvinecopulib.cpp 
+  tools.cpp 
+  family_enums.cpp 
+  bicop_fit_controls.cpp
+  vinecop_fit_controls.cpp
+)
+
 if (APPLE)
   set_target_properties(pyvinecopulib PROPERTIES SUFFIX ".so") # defaults to .dylib which is not looked for by Python
 elseif (WIN32)
