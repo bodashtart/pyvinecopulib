@@ -18,6 +18,8 @@
 // https://misspent.wordpress.com/2009/09/27/how-to-write-boost-python-converters/
 // http://stackoverflow.com/questions/10701514/how-to-return-numpy-array-from-boostpython
 
+#include <iostream>
+
 namespace pyvinecopulib
 {
     namespace bp = boost::python;
