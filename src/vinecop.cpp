@@ -70,6 +70,8 @@ namespace pyvinecopulib
             )
         { }
 
+        vinecop_wrap(const Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic> &matrix) : vinecopulib::Vinecop(matrix) {}
+
         vinecop_wrap(const Eigen::MatrixXd &data) : vinecopulib::Vinecop(data) {}
         
         vinecop_wrap(const Eigen::MatrixXd &data, const vinecopulib::FitControlsBicop &controls) : vinecopulib::Vinecop(data, controls) {}
@@ -98,6 +100,7 @@ namespace pyvinecopulib
             // ctors
             .def(bp::init<size_t>())
             .def(bp::init<bp::list, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>()) 
+            .def(bp::init<Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>())
             .def(bp::init<Eigen::MatrixXd>())
             .def(bp::init<Eigen::MatrixXd, vinecopulib::FitControlsBicop>())
             .def(bp::init<Eigen::MatrixXd, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>())
