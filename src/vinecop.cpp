@@ -103,9 +103,11 @@ namespace pyvinecopulib
             .def(bp::init<Eigen::MatrixXd, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>())
             .def(bp::init<Eigen::MatrixXd, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>, vinecopulib::FitControlsVinecop>())
             // properties
-            .add_property("all_rotations", &vinecop_wrap::get_all_rotations)
-            .add_property("all_families",  &vinecop_wrap::get_all_families)
-            .add_property("matrix",        &vinecop_wrap::get_matrix)
+            .add_property("all_pair_copulas", &vinecop_wrap::get_all_pair_copulas)
+            .add_property("all_parameters",   &vinecop_wrap::get_all_parameters)
+            .add_property("all_rotations",    &vinecop_wrap::get_all_rotations)
+            .add_property("all_families",     &vinecop_wrap::get_all_families)
+            .add_property("matrix",           &vinecop_wrap::get_matrix)
             // methods
             .def("rotation",               &vinecop_wrap::get_rotation)
             .def("parameters",             &vinecop_wrap::get_parameters)
