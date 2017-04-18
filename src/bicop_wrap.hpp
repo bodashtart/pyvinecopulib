@@ -33,7 +33,10 @@ namespace pyvinecopulib
         bicop_wrap(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data) : vinecopulib::Bicop(data) {}
         bicop_wrap(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data, const vinecopulib::FitControlsBicop &controls) : vinecopulib::Bicop(data, controls) {}
 
-        void fit(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data) { vinecopulib::Bicop::fit(data); }
-        void select(Eigen::Matrix<double, Eigen::Dynamic, 2> data) { vinecopulib::Bicop::select(data); }
+        void fit_1arg(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data) { vinecopulib::Bicop::fit(data); }
+        void fit_2arg(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data, const vinecopulib::FitControlsBicop &controls) { vinecopulib::Bicop::fit(data, controls); }
+
+        void select_1arg(Eigen::Matrix<double, Eigen::Dynamic, 2> data) { vinecopulib::Bicop::select(data); }
+        void select_2arg(Eigen::Matrix<double, Eigen::Dynamic, 2> data, const vinecopulib::FitControlsBicop &controls) { vinecopulib::Bicop::select(data, controls); }
     };
 }

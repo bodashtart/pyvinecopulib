@@ -87,9 +87,13 @@ namespace pyvinecopulib
             const vinecopulib::FitControlsBicop &controls
         ) : vinecopulib::Vinecop(data, matrix, controls) {}
 
-        void select_all(const Eigen::MatrixXd& data) { vinecopulib::Vinecop::select_all(data); }
+        void select_all_1arg(const Eigen::MatrixXd& data) { vinecopulib::Vinecop::select_all(data); }
 
-        void select_families(const Eigen::MatrixXd& data) { vinecopulib::Vinecop::select_families(data); }
+        void select_all_2arg(const Eigen::MatrixXd& data, const vinecopulib::FitControlsVinecop &controls) { vinecopulib::Vinecop::select_all(data, controls); }
+
+        void select_families_1arg(const Eigen::MatrixXd& data) { vinecopulib::Vinecop::select_families(data); }
+
+        void select_families_2arg(const Eigen::MatrixXd& data, const vinecopulib::FitControlsVinecop &controls) { vinecopulib::Vinecop::select_families(data, controls); }
     };
 
     void export_vinecop_class()
@@ -102,7 +106,7 @@ namespace pyvinecopulib
             .def(bp::init<bp::list, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>()) 
             .def(bp::init<Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>())
             .def(bp::init<Eigen::MatrixXd>())
-            .def(bp::init<Eigen::MatrixXd, vinecopulib::FitControlsBicop>())
+            .def(bp::init<Eigen::MatrixXd, vinecopulib::FitControlsVinecop>())
             .def(bp::init<Eigen::MatrixXd, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>())
             .def(bp::init<Eigen::MatrixXd, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>, vinecopulib::FitControlsVinecop>())
             // properties
@@ -119,8 +123,10 @@ namespace pyvinecopulib
             .def("pdf",                    &vinecop_wrap::pdf)
             .def("simulate",               &vinecop_wrap::simulate) 
             .def("inverse_rosenblatt",     &vinecop_wrap::inverse_rosenblatt)
-            .def("select_families",        &vinecop_wrap::select_families)
-            .def("select_all",             &vinecop_wrap::select_all)
+            .def("select_families",        &vinecop_wrap::select_families_1arg)
+            .def("select_families",        &vinecop_wrap::select_families_2arg)
+            .def("select_all",             &vinecop_wrap::select_all_1arg)
+            .def("select_all",             &vinecop_wrap::select_all_2arg)
             .def("calculate_npars",        &vinecop_wrap::calculate_npars)
             .def("loglik",                 &vinecop_wrap::loglik)
             .def("aic",                    &vinecop_wrap::aic)

@@ -41,6 +41,8 @@ namespace pyvinecopulib
           : vinecopulib::FitControlsVinecop(controls, size, str, dbl) {}
         vfit_controls_wrap(const FitControlsBicop &controls, const size_t &size, const std::string &str, const double &dbl, const bool &bl) 
           : vinecopulib::FitControlsVinecop(controls, size, str, dbl, bl) {}
+
+        void set_family_set(const bp::list &list) { vinecopulib::FitControlsBicop::set_family_set(to_stdvec<vinecopulib::BicopFamily>(list)); }
     };
 
     void export_vinecop_fit_controls()
