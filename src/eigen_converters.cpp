@@ -18,10 +18,13 @@
 // https://misspent.wordpress.com/2009/09/27/how-to-write-boost-python-converters/
 // http://stackoverflow.com/questions/10701514/how-to-return-numpy-array-from-boostpython
 
-namespace
+#include <iostream>
+
+namespace pyvinecopulib
 {
     namespace bp = boost::python;
 
+    // TODO: resuse stdl_converter!
     struct VecXd_to_list
     {
         static PyObject* convert(Eigen::VectorXd const &vec)
@@ -33,6 +36,7 @@ namespace
         }
     };
 
+    // TODO: reuse STL converter!
     struct list_to_VecXd
     {
         static void* convertible(PyObject* obj_ptr)
@@ -67,6 +71,8 @@ namespace
             size[1] = mat.rows();
             size[0] = mat.cols();
 
+            if (size[0] == 0 && size[1] == 0) return bp::incref(bp::object().ptr());
+
             typename MatrixT::Scalar * data = const_cast<typename MatrixT::Scalar*>(&mat(0,0)); 
 
 // TODO: assert sizeof(Eigen::MatrixXi::Scalar) == sizof(NPY_INT)
@@ -86,9 +92,11 @@ namespace
     {
         static void* convertible(PyObject* obj_ptr)
         {
+            if (!PyArray_Check(obj_ptr)) return 0;
 // TODO: check if contiguous
 // TODO: should we throw here?
 // TODO: assert sizeof
+std::cerr << "ndim: " << PyArray_NDIM(obj_ptr) << " type: " << PyArray_TYPE(obj_ptr) << std::endl;
             if (PyArray_NDIM(obj_ptr) != 2) return 0;
             if (PyArray_TYPE(obj_ptr) != NumpyType) return 0;
             return obj_ptr;
@@ -114,7 +122,6 @@ namespace
             data->convertible = storage;
         }
     };
-}
 
 void register_eigen_converters()
 {
@@ -179,4 +186,5 @@ void register_eigen_converters()
         &ndarray_to_MatX<NPY_DOUBLE, Eigen::MatrixXd>::construct,
         bp::type_id<Eigen::Matrix<double, Eigen::Dynamic, 2>>()
     );
+}
 }

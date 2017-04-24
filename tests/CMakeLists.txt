@@ -1,7 +1,6 @@
-find_package(PythonInterp REQUIRED)
-
-foreach (test_name test_git_revision)#;test_bicop;test_vinecop;test_bicop_readme_example)
-  add_test(NAME ${test_name} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py)
+function(pyvinecopulib_add_test test_filename)
+  get_filename_component(test_name ${test_filename} NAME_WE)
+  add_test(NAME ${test_name} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${PYTHON_EXECUTABLE} ${test_filename})
 
   if (WIN32)
     get_filename_component(TMP_PYTHON_LIB_PATH ${PYTHON_LIBRARIES} DIRECTORY)
@@ -20,5 +19,7 @@ foreach (test_name test_git_revision)#;test_bicop;test_vinecop;test_bicop_readme
       set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=${VINECOPULIB_LIB_PATH}")
     endif()
   endif()
+endfunction()
 
-endforeach()
+add_subdirectory(unit)
+add_subdirectory(readme)
