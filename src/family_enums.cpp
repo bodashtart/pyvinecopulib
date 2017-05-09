@@ -8,7 +8,7 @@ namespace pyvinecopulib
 {
     namespace bp = boost::python;
 
-    
+
 
     void export_family_enums()
     {
