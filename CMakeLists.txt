@@ -4,6 +4,10 @@ project(pyvinecopulib CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 
+if (CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-z,defs")
+endif()
+
 enable_testing()
 
 include(cmake/findEigen3.cmake            REQUIRED)
