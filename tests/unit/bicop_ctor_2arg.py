@@ -5,7 +5,7 @@ bicop = pvcl.bicop(pvcl.joe, 90)
 assert bicop.family == pvcl.joe
 assert bicop.family_name == pvcl.get_family_name(pvcl.joe)
 assert bicop.rotation == 90
-print bicop.parameters #TODO!
+#print bicop.parameters #TODO!
 #assert len(bicop.parameters) == 1
 #assert bicop.parameters[0] == 0
 

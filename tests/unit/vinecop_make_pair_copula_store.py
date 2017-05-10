@@ -10,4 +10,4 @@ try:
   pvcl.vinecop.make_pair_copula_store()
   assert False
 except Exception as ex:
-  print ex
+  print(ex)

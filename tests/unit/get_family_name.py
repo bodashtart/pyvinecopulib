@@ -17,4 +17,4 @@ try:
   pvcl.get_family_name(44)
   assert False
 except Exception as ex:
-  print ex
+  print(ex)

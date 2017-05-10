@@ -12,4 +12,4 @@ try:
   bicop = pvcl.bicop(44)
   assert False
 except Exception as ex:
-  print ex
+  print(ex)
