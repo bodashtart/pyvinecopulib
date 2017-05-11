@@ -10,4 +10,4 @@ fitted = pvcl.bicop(pvcl.gaussian)
 ctrl = pvcl.bicop_fit_controls()
 fitted.fit(data, ctrl);
 
-assert abs(fitted.parameters[0][0] - param) / param < .01
+assert abs(fitted.parameters[0][0] - param) / param < .05

@@ -9,4 +9,4 @@ data = model.simulate(1000);
 fitted = pvcl.bicop(pvcl.gaussian)
 fitted.fit(data);
 
-assert abs(fitted.parameters[0][0] - param) / param < .01
+assert abs(fitted.parameters[0][0] - param) / param < .05
