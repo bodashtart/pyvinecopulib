@@ -62,8 +62,8 @@ build_script:
 
   - cd ..
   
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 on_success:
   - 7z a pyvinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%.zip build\src\Release\pyvinecopulib.* build\src\Debug\pyvinecopulib.*

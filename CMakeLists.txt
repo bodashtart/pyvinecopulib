@@ -10,8 +10,8 @@ endif()
 
 enable_testing()
 
-include(cmake/findEigen3.cmake            REQUIRED)
-include(cmake/findNlopt.cmake             REQUIRED)
+include(cmake/findEigen3.cmake REQUIRED)
+find_package(NLopt             REQUIRED)
 
 find_package(vinecopulib REQUIRED)
 find_library(VINECOPULIB_LIB_PATH vinecopulib)

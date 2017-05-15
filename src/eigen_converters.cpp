@@ -96,7 +96,6 @@ namespace pyvinecopulib
 // TODO: check if contiguous
 // TODO: should we throw here?
 // TODO: assert sizeof
-std::cerr << "ndim: " << PyArray_NDIM(obj_ptr) << " type: " << PyArray_TYPE(obj_ptr) << std::endl;
             if (PyArray_NDIM(obj_ptr) != 2) return 0;
             if (PyArray_TYPE(obj_ptr) != NumpyType) return 0;
             return obj_ptr;
