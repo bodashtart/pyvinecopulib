@@ -27,6 +27,7 @@ before_install:
 
 install:
   - git clone --depth=1 --single-branch --branch dev https://github.com/vinecopulib/vinecopulib.git
+  - if [ $TRAVIS_OS_NAME == linux ]; then git clone https://github.com/stevengj/nlopt.git; fi
 
   ### LINUX dependencies
   - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get install --no-install-recommends -t zesty -y g++-5 libeigen3-dev libboost1.63-dev libboost-python1.63-dev python$PYTHONVER-dev python$([ "${PYTHONVER:0:1}" == 3 ] && echo ${PYTHONVER:0:1} || echo "")-numpy; fi
@@ -38,8 +39,6 @@ install:
   - if [ $TRAVIS_OS_NAME == osx ]; then rm /usr/local/include/c++; fi # https://github.com/Homebrew/brew/issues/1742#issuecomment-277308817
 
   ### NLopt
-  - if [ $TRAVIS_OS_NAME == linux ]; then cd ..; fi
-  - if [ $TRAVIS_OS_NAME == linux ]; then git clone https://github.com/stevengj/nlopt.git; fi
   - if [ $TRAVIS_OS_NAME == linux ]; then cd nlopt; fi
   - if [ $TRAVIS_OS_NAME == linux ]; then mkdir build; fi
   - if [ $TRAVIS_OS_NAME == linux ]; then cd build; fi
@@ -47,7 +46,6 @@ install:
   - if [ $TRAVIS_OS_NAME == linux ]; then make; fi
   - if [ $TRAVIS_OS_NAME == linux ]; then sudo make install; fi
   - if [ $TRAVIS_OS_NAME == linux ]; then cd ../..; fi
-  - if [ $TRAVIS_OS_NAME == linux ]; then cd vinecopulib; fi
   - if [ $TRAVIS_OS_NAME == osx ]; then brew install --HEAD nlopt; fi
 
   ### Vinecopulib
