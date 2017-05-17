@@ -9,7 +9,7 @@ pair_copulas = pvcl.vinecop.make_pair_copula_store(d)
 
 par = np.array([[3.]])
 for tree in pair_copulas:
-    for idx in xrange(len(tree)):
+    for idx in range(len(tree)):
         tree[idx] = pvcl.bicop(pvcl.clayton, 270, par)
 
 mat = np.array([
