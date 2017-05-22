@@ -55,9 +55,9 @@ build_script:
   - set path_orig=%path%
 
   - cmake --build . --config Debug
-  - ctest -C Debug --output-on-failure
-
   - cmake --build . --config Release
+
+  - ctest -C Debug --output-on-failure
   - ctest -C Release --output-on-failure
 
   - cd ..
