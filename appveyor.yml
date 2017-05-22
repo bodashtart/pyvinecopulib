@@ -1,5 +1,5 @@
 platform: 
-#  - x86
+  - x86
   - x64
 
 init:
@@ -63,8 +63,7 @@ build_script:
   - cd ..
   
 on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #on_success:
-  - 7z a pyvinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%.zip build\src\Release\pyvinecopulib.* build\src\Debug\pyvinecopulib.* C:\projects\vinecopulib-install\lib\vinecopulib.* C:\projects\nlopt-install\lib\nlopt.*
+  - 7z a pyvinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%.zip C:\projects\pyvinecopulib\build\src\Release\pyvinecopulib.* C:\projects\pyvinecopulib\build\src\Debug\pyvinecopulib.* C:\projects\vinecopulib-install\lib\vinecopulib.* C:\projects\nlopt-install\lib\nlopt.*
   - appveyor PushArtifact pyvinecopulib-%APPVEYOR_REPO_COMMIT%-%platform%.zip
