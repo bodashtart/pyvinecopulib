@@ -21,9 +21,9 @@ if (NOT WIN32)
 endif()
 
 
-if (CMAKE_COMPILER_IS_GNUCXX)
-  target_compile_definitions(pyvinecopulib PRIVATE _GLIBCXX_USE_CXX11_ABI=1)
-endif()
+#if (CMAKE_COMPILER_IS_GNUCXX)
+#  target_compile_definitions(pyvinecopulib PRIVATE _GLIBCXX_USE_CXX11_ABI=1)
+#endif()
 
 
 # vinecopulib
