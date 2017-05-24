@@ -31,8 +31,8 @@ install:
   - if [ $TRAVIS_OS_NAME == linux ]; then git clone https://github.com/stevengj/nlopt.git; fi
 
   ### LINUX dependencies
-  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get install --no-install-recommends -t zesty -y g++-6 libeigen3-dev libboost1.63-dev libboost-python1.63-dev python$PYTHONVER-dev python$([ "${PYTHONVER:0:1}" == 3 ] && echo ${PYTHONVER:0:1} || echo "")-numpy; fi
-  - if [ $TRAVIS_OS_NAME == linux ]; then export CMAKE_ARGS="-DPYTHON_EXECUTABLE=/usr/bin/python$PYTHONVER -DPYTHON_INCLUDE_DIR=/usr/include/python$PYTHONVER -DCMAKE_CXX_COMPILER=g++-6"; fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get install --no-install-recommends -t zesty -y g++-5 libeigen3-dev libboost1.63-dev libboost-python1.63-dev python$PYTHONVER-dev python$([ "${PYTHONVER:0:1}" == 3 ] && echo ${PYTHONVER:0:1} || echo "")-numpy; fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then export CMAKE_ARGS="-DPYTHON_EXECUTABLE=/usr/bin/python$PYTHONVER -DPYTHON_INCLUDE_DIR=/usr/include/python$PYTHONVER -DCMAKE_CXX_COMPILER=g++-5"; fi
 
   ### OSX dependencies
   - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew tap homebrew/science && brew install eigen boost-python; fi
