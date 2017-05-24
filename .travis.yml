@@ -4,9 +4,10 @@ sudo: required
 
 matrix:
   include:
-    - os: linux
-      dist: trusty
-      env: PYTHONVER=3.5
+# TODO: see https://github.com/vinecopulib/pyvinecopulib/issues/13
+#    - os: linux
+#      dist: trusty
+#      env: PYTHONVER=3.5
     - os: linux
       dist: trusty
       env: PYTHONVER=2.7
