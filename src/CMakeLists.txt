@@ -1,12 +1,29 @@
-add_library(pyvinecopulib SHARED git_revision.cpp bicop.cpp eigen_converters.cpp pyvinecopulib.cpp)
+add_library(pyvinecopulib SHARED 
+  version.cpp 
+  bicop.cpp 
+  vinecop.cpp 
+  eigen_converters.cpp 
+  pyvinecopulib.cpp 
+  tools.cpp 
+  family_enums.cpp 
+  bicop_fit_controls.cpp
+  vinecop_fit_controls.cpp
+)
+
 if (APPLE)
   set_target_properties(pyvinecopulib PROPERTIES SUFFIX ".so") # defaults to .dylib which is not looked for by Python
 elseif (WIN32)
   set_target_properties(pyvinecopulib PROPERTIES SUFFIX ".pyd") # defaults to .dll which is not looked for by Python
+  target_compile_definitions(pyvinecopulib PRIVATE BOOST_ALL_NO_LIB=1)
 endif()
 if (NOT WIN32)
   set_target_properties(pyvinecopulib PROPERTIES PREFIX "")
 endif()
+
+
+#if (CMAKE_COMPILER_IS_GNUCXX)
+#  target_compile_definitions(pyvinecopulib PRIVATE _GLIBCXX_USE_CXX11_ABI=1)
+#endif()
 
 
 # vinecopulib

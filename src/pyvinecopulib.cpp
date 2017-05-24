@@ -13,17 +13,26 @@
 
 #include <boost/python.hpp>
 
-void register_eigen_converters();
-void export_git_revision();
-void export_family_enums();
-void export_bicop_class();
-void export_vinecop_class();
-
-BOOST_PYTHON_MODULE(pyvinecopulib)
+namespace pyvinecopulib
 {
-    register_eigen_converters();
-    export_git_revision();
-    export_family_enums(); 
-    export_bicop_class();
-    export_vinecop_class();
+    void register_eigen_converters();
+    void export_version();
+    void export_family_enums();
+    void export_bicop_class();
+    void export_vinecop_class();
+    void export_tools();
+    void export_bicop_fit_controls();
+    void export_vinecop_fit_controls();
+
+    BOOST_PYTHON_MODULE(pyvinecopulib)
+    {
+        register_eigen_converters();
+        export_version();
+        export_family_enums(); 
+        export_bicop_class();
+        export_vinecop_class();
+        export_tools();
+        export_bicop_fit_controls();
+        export_vinecop_fit_controls();
+    }
 }
