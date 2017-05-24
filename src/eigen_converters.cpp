@@ -97,6 +97,7 @@ namespace pyvinecopulib
 // TODO: should we throw here?
 // TODO: assert sizeof
             if (PyArray_NDIM(obj_ptr) != 2) return 0;
+std::cerr << PyArray_TYPE(obj_ptr) << " vs. " << NumpyType << std::endl;
             if (PyArray_TYPE(obj_ptr) != NumpyType) return 0;
             return obj_ptr;
         }
@@ -156,17 +157,17 @@ void register_eigen_converters()
         bp::type_id<Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>>()
     );
 
+    bp::converter::registry::push_back(
+        &ndarray_to_MatX<NPY_UINT64, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>::convertible,
+        &ndarray_to_MatX<NPY_UINT64, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>::construct,
+        bp::type_id<Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>()
+    );
+
     {
         const int NPY_SIZET = 
             sizeof(size_t) == 8 ? NPY_UINT64 :
             sizeof(size_t) == 4 ? NPY_UINT32 :
             throw new std::logic_error("");
-
-        bp::converter::registry::push_back(
-            &ndarray_to_MatX<NPY_SIZET, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>::convertible,
-            &ndarray_to_MatX<NPY_SIZET, Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>::construct,
-            bp::type_id<Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>>()
-        );
 
         bp::to_python_converter<
             Eigen::Matrix<size_t, Eigen::Dynamic, Eigen::Dynamic>, 
