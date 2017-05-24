@@ -21,6 +21,11 @@ if (NOT WIN32)
 endif()
 
 
+if (CMAKE_COMPILER_IS_GNUCXX)
+  target_compile_definitions(pyvinecopulib PRIVATE _GLIBCXX_USE_CXX11_ABI=1)
+endif()
+
+
 # vinecopulib
 target_link_libraries(pyvinecopulib ${VINECOPULIB_LIBRARIES} ${NLOPT_LIBRARIES})
 target_include_directories(pyvinecopulib PUBLIC ${VINECOPULIB_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIR} ${NLOPT_INCLUDE_DIR})
