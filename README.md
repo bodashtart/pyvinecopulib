@@ -7,19 +7,39 @@ Python bindings for vinecopulib
  
 #### What is pyvinecopulib?
 
-Pyvinecopulib is a thin Python wrapper around the [vinecopulib](http://github.com/vinecopulib/vinecopulib) C++ library.
+pyvinecopulib is a thin Python wrapper around the [vinecopulib](http://github.com/vinecopulib/vinecopulib) C++ library.
 
-Pyvinecopulib is written in C++ and is based on the [Boost.Python](http://boost.org/libs/python) package.
+pyvinecopulib is written in C++ and is based on the [Boost.Python](http://boost.org/libs/python) package.
 
 #### Status
 
 Pre-alpha.
 
-All developed functionalities are available for Linux, OSX and Windows.
+The developed functionality is available for Linux, OSX and Windows.
 
-The aim is to support both Python 2 and 3, as of time of writing continuous integration is only done for Python 2 , though.
+The aim is to support both Python 2 and 3. Continuous integration at present is only supported for Python 2 though.
 
 #### Documentation
+
+- [Getting started](#getting-started)
+	- [Requirements](#requirements)
+	- [Building the library](#building-the-library)
+	- [Running tests](#running-tests)
+ - [Installation](#installation)
+- [Usage examples](#usage-examples)
+ - [Bivariate copula models](#bivariate-copula-models)
+	 - [Implemented bivariate copula families](#implemented-bivariate-copula-families)
+	 - [Set up a custom bivariate copula model](#set-up-a-custom-bivariate-copula-model)
+	 - [Fit and select a bivariate copula](#fit-and-select-a-bivariate-copula)
+	 - [Work with a bivariate copula model](#work-with-a-bivariate-copula-model)
+ - [Vine copula models](#vine-copula-models)
+	 - [Set up a custom vine copula model](#set-up-a-custom-vine-copula-model)
+	 - [How to read the R-vine matrix](#how-to-read-the-r-vine-matrix)
+	 - [Fit and select a vine copula model](#fit-and-select-a-vine-copula-model)
+	 - [Work with a vine copula model](#work-with-a-vine-copula-model)
+
+
+------------------------------------------------
 
 ## Getting started
 
@@ -52,3 +72,34 @@ The additional dependencies are readily available for all target platforms:
 ### Installation
 
 ## Usage examples
+
+The following usage examples follow the examples setup in the [README file](https://github.com/vinecopulib/vinecopulib/blob/master/README.md) for vinecopulib.
+
+### Bivariate copula models
+
+#### Implemented bivariate copula families
+
+
+**Example**
+
+#### Set up a custom bivariate copula model
+
+
+**Example**
+
+
+#### Fit and select a bivariate copula
+
+**Example**
+
+#### Work with a bivariate copula model
+
+### Vine copula models
+
+#### Set up a custom vine copula model
+
+#### How to read the R-vine matrix
+
+#### Fit and select a vine copula model
+
+#### Work with a vine copula model
